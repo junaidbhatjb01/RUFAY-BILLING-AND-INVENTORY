@@ -1,14 +1,37 @@
-
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useData } from '../../contexts/DataContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { PlusIcon, EditIcon, TrashIcon } from '../../components/ui/Icons';
 import { PaymentStatus } from '../../types';
 
 const InvoiceList: React.FC = () => {
-  // FIX: Replaced `setInvoices` with `deleteInvoice` from context
   const { invoices, deleteInvoice, parties, settings } = useData();
   const navigate = useNavigate();
+
+  const [statusFilter, setStatusFilter] = useState<PaymentStatus | 'All'>('All');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  const handleClearFilters = () => {
+    setStatusFilter('All');
+    setStartDate('');
+    setEndDate('');
+  };
+
+  const filteredInvoices = useMemo(() => {
+    return invoices
+      .filter(invoice => {
+        if (statusFilter === 'All') return true;
+        return invoice.status === statusFilter;
+      })
+      .filter(invoice => {
+        // Using string comparison for 'YYYY-MM-DD' is reliable and avoids timezone issues.
+        if (startDate && invoice.date < startDate) return false;
+        if (endDate && invoice.date > endDate) return false;
+        return true;
+      })
+      .sort((a, b) => b.invoiceNumber - a.invoiceNumber);
+  }, [invoices, statusFilter, startDate, endDate]);
 
   const getPartyName = (partyId: string) => {
     return parties.find(p => p.id === partyId)?.name || 'N/A';
@@ -16,7 +39,6 @@ const InvoiceList: React.FC = () => {
 
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this invoice? This action cannot be undone.")) {
-      // FIX: Use context function for deletion
       deleteInvoice(id);
     }
   };
@@ -28,7 +50,9 @@ const InvoiceList: React.FC = () => {
       case PaymentStatus.PARTIAL: return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
     }
-  }
+  };
+
+  const statusOptions: (PaymentStatus | 'All')[] = ['All', PaymentStatus.PAID, PaymentStatus.UNPAID, PaymentStatus.PARTIAL];
 
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -38,6 +62,35 @@ const InvoiceList: React.FC = () => {
           <PlusIcon className="w-5 h-5 mr-2" />
           Create Invoice
         </Link>
+      </div>
+
+      <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg space-y-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <div>
+            <span className="text-sm font-medium mr-3">Status:</span>
+            <div className="inline-flex rounded-md shadow-sm" role="group">
+              {statusOptions.map(status => (
+                <button
+                  key={status}
+                  type="button"
+                  onClick={() => setStatusFilter(status)}
+                  className={`px-4 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 first:rounded-l-lg last:rounded-r-lg transition-colors duration-150 ${statusFilter === status ? 'bg-teal-600 text-white z-10' : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-600'}`}
+                >
+                  {status}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+             <label htmlFor="startDate" className="text-sm font-medium">From:</label>
+             <input type="date" id="startDate" value={startDate} onChange={e => setStartDate(e.target.value)} className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-sm" />
+          </div>
+          <div className="flex items-center gap-2">
+              <label htmlFor="endDate" className="text-sm font-medium">To:</label>
+              <input type="date" id="endDate" value={endDate} onChange={e => setEndDate(e.target.value)} className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-sm" />
+          </div>
+          <button onClick={handleClearFilters} className="text-sm text-gray-600 dark:text-gray-300 hover:underline">Clear Filters</button>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
@@ -53,7 +106,7 @@ const InvoiceList: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            {invoices.sort((a,b) => b.invoiceNumber - a.invoiceNumber).map(invoice => (
+            {filteredInvoices.map(invoice => (
               <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onClick={() => navigate(`/invoices/${invoice.id}`)}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">INV-{invoice.invoiceNumber}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{getPartyName(invoice.partyId)}</td>
@@ -72,7 +125,7 @@ const InvoiceList: React.FC = () => {
             ))}
           </tbody>
         </table>
-        {invoices.length === 0 && <p className="text-center py-8 text-gray-500">No invoices found. Create your first one!</p>}
+        {filteredInvoices.length === 0 && <p className="text-center py-8 text-gray-500">No invoices match the current filters.</p>}
       </div>
     </div>
   );

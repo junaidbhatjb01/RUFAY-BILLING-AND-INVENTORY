@@ -686,7 +686,21 @@ export const deleteBooking = (ownerId: string, bookingId: string): Promise<void>
 
 // --- NEW: ONLINE FLIGHT BOOKING ---
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+let aiInstance: GoogleGenAI | null = null;
+
+function getAiInstance(): GoogleGenAI {
+    if (aiInstance) {
+        return aiInstance;
+    }
+
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+        throw new Error("Gemini API key is not configured in environment variables. Flight search is unavailable.");
+    }
+    
+    aiInstance = new GoogleGenAI({ apiKey });
+    return aiInstance;
+}
 
 export const searchFlights = async (
   from: string,
@@ -737,6 +751,7 @@ export const searchFlights = async (
   `;
 
   try {
+    const ai = getAiInstance();
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
@@ -747,9 +762,10 @@ export const searchFlights = async (
 
     const jsonText = response.text.trim();
     return JSON.parse(jsonText);
-  } catch (error) {
-    console.error("Error fetching flight data from Gemini API:", error);
-    throw new Error("Failed to fetch flight data. Please try again.");
+  } catch (error: any) {
+    console.error("Error in searchFlights:", error);
+    alert(error.message || "An error occurred while searching for flights. Please check your API key configuration and try again.");
+    return [];
   }
 };
 

@@ -42,6 +42,10 @@ const CreateInvoice: React.FC = () => {
                 if (product) {
                     updatedItem.productName = product.name;
                     updatedItem.rate = product.sellingPrice;
+                } else {
+                    // If product is not found or deselected, clear the fields
+                    updatedItem.productName = '';
+                    updatedItem.rate = 0;
                 }
             }
             return updatedItem;
@@ -78,10 +82,24 @@ const CreateInvoice: React.FC = () => {
     setIsProductModalOpen(true);
   };
 
-  const handleSaveProduct = async (newProductData: Omit<Product, 'id'>) => {
-    await addProduct(newProductData);
-    setIsProductModalOpen(false);
-    setAddingProductIndex(null);
+  const handleSaveProduct = async (productFormData: Product) => {
+    // The modal provides a full Product object with a temporary ID.
+    // We only need the data, the API will create the real ID.
+    const { id, ...newProductData } = productFormData;
+    try {
+        const newProduct = await addProduct(newProductData);
+        setIsProductModalOpen(false);
+        
+        // Auto-select the newly created product in the invoice line.
+        if (addingProductIndex !== null) {
+            // This will also trigger the logic in handleItemChange to populate name and rate
+            handleItemChange(addingProductIndex, 'productId', newProduct.id);
+        }
+        setAddingProductIndex(null);
+    } catch (error) {
+        console.error("Failed to add product from invoice:", error);
+        alert("Could not add the new product.");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -198,7 +216,7 @@ const CreateInvoice: React.FC = () => {
       <ProductModal
         isOpen={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
-        onSave={(data) => handleSaveProduct(data)}
+        onSave={handleSaveProduct}
         product={null}
       />
     </div>

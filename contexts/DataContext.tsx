@@ -82,10 +82,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   // CRUD Functions that call the API
-  const addProduct = async (productData: Omit<Product, 'id'>) => {
+  const addProduct = async (productData: Omit<Product, 'id'>): Promise<Product> => {
     if(!dataOwnerId) throw new Error("User not authenticated");
     const newProduct = await api.addProduct(dataOwnerId, productData);
     setProducts(prev => [...prev, newProduct]);
+    return newProduct;
   };
 
   const updateProduct = async (productData: Product) => {

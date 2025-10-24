@@ -175,6 +175,9 @@ const Settings: React.FC = () => {
                         <option value="$">US Dollar ($)</option>
                         <option value="€">Euro (€)</option>
                         <option value="£">British Pound (£)</option>
+                        <option value="¥">Japanese Yen (¥)</option>
+                        <option value="A$">Australian Dollar (A$)</option>
+                        <option value="C$">Canadian Dollar (C$)</option>
                      </select>
                     <input type="text" name="bankName" placeholder="Bank Name" value={localSettings.bankName} onChange={handleChange} className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2" />
                     <input type="text" name="accountNumber" placeholder="Account Number" value={localSettings.accountNumber} onChange={handleChange} className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2" />

@@ -118,7 +118,7 @@ export interface Settings {
   ifscCode: string;
   upiId: string;
   upiQRCode: string | null;
-  currency: '₹' | '$' | '€' | '£';
+  currency: '₹' | '$' | '€' | '£' | '¥' | 'A$' | 'C$';
   invoiceCounter: number;
   bookingCounter: number;
   quotationCounter: number;
@@ -238,7 +238,7 @@ export interface DataContextType {
   settings: Settings;
   
   // Data modification functions
-  addProduct: (product: Omit<Product, 'id'>) => Promise<void>;
+  addProduct: (product: Omit<Product, 'id'>) => Promise<Product>;
   updateProduct: (product: Product) => Promise<void>;
   deleteProduct: (productId: string) => Promise<void>;
   
