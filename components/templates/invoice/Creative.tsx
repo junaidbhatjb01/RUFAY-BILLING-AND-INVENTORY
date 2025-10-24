@@ -33,7 +33,7 @@ const CreativeInvoiceTemplate: React.FC<TemplateProps> = ({ invoice, party, sett
             <main className="w-full md:w-2/3 p-8">
                 <div className="text-right mb-8">
                     <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300">INVOICE</h2>
-                    <p className="text-gray-500"># INV-{invoice.invoiceNumber}</p>
+                    <p className="text-gray-500"># {settings.invoicePrefix || ''}{invoice.invoiceNumber}</p>
                     <p className="text-gray-500">Date: {new Date(invoice.date).toLocaleDateString()}</p>
                 </div>
                  <table className="w-full text-left text-sm mb-8">

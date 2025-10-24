@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useData } from '../../contexts/DataContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -44,7 +43,7 @@ const SalesOrderList: React.FC = () => {
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {salesOrders.sort((a,b) => b.salesOrderNumber - a.salesOrderNumber).map(so => (
               <tr key={so.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onClick={() => navigate(`/sales-orders/${so.id}`)}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">SO-{so.salesOrderNumber}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{settings.salesOrderPrefix || ''}{so.salesOrderNumber}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{getPartyName(so.partyId)}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{new Date(so.date).toLocaleDateString()}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{settings.currency}{so.total.toFixed(2)}</td>

@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useData } from '../../contexts/DataContext';
@@ -57,7 +56,7 @@ const PartyDetail: React.FC = () => {
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {partyInvoices.map(invoice => (
               <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onClick={() => navigate(`/invoices/${invoice.id}`)}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">INV-{invoice.invoiceNumber}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{settings.invoicePrefix || ''}{invoice.invoiceNumber}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{new Date(invoice.date).toLocaleDateString()}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{settings.currency}{invoice.total.toFixed(2)}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-500">{settings.currency}{(invoice.total-invoice.amountPaid).toFixed(2)}</td>

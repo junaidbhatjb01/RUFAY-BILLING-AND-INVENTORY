@@ -34,7 +34,7 @@ const BookingDetail: React.FC = () => {
     };
 
     const handleDelete = () => {
-        if (booking && window.confirm(`Are you sure you want to delete Booking #BKG-${booking.bookingNumber}? This will also delete the associated invoice and restore seat inventory.`)) {
+        if (booking && window.confirm(`Are you sure you want to delete Booking #${settings.bookingPrefix || ''}${booking.bookingNumber}? This will also delete the associated invoice and restore seat inventory.`)) {
             deleteBooking(booking.id).then(() => {
                 navigate('/bookings');
             });
@@ -63,13 +63,13 @@ const BookingDetail: React.FC = () => {
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
-            const fileName = `E-Ticket-BKG-${booking.bookingNumber}.pdf`;
+            const fileName = `E-Ticket-${settings.bookingPrefix || ''}${booking.bookingNumber}.pdf`;
             const pdfBlob = pdf.output('blob');
 
             if (navigator.share) {
                 const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
                 await navigator.share({
-                    title: `E-Ticket BKG-${booking.bookingNumber}`,
+                    title: `E-Ticket ${settings.bookingPrefix || ''}${booking.bookingNumber}`,
                     text: `Here is your E-Ticket from ${settings.businessName}`,
                     files: [file],
                 });

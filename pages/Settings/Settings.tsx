@@ -18,6 +18,7 @@ const Settings: React.FC = () => {
     const [isStaffModalOpen, setIsStaffModalOpen] = useState(false);
     const [staffList, setStaffList] = useState<User[]>([]);
     const [backupFile, setBackupFile] = useState<File | null>(null);
+    const [editingCounter, setEditingCounter] = useState<string | null>(null);
 
     useEffect(() => {
         setLocalSettings(settings);
@@ -37,7 +38,12 @@ const Settings: React.FC = () => {
     }, [user]);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        setLocalSettings({ ...localSettings, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        const isCounter = name.includes('Counter');
+        setLocalSettings({ 
+            ...localSettings, 
+            [name]: isCounter ? Math.max(1, parseInt(value)) : value 
+        });
     };
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>, type: 'logo' | 'qrCode') => {
@@ -61,6 +67,7 @@ const Settings: React.FC = () => {
     const handleSave = () => {
         updateSettings(localSettings).then(() => {
             alert('Settings saved successfully!');
+            setEditingCounter(null); // Lock all counters after saving
         }).catch(err => {
             alert('Failed to save settings.');
             console.error(err);
@@ -189,6 +196,56 @@ const Settings: React.FC = () => {
                         {qrCodePreview && <img src={qrCodePreview} alt="QR Code Preview" className="mt-4 h-24 w-24 object-contain rounded-md border p-1 dark:border-gray-600" />}
                     </div>
                 </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-8">
+                <h2 className="text-xl font-semibold mb-4">Numbering & Prefixes</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                    Set the prefix and the <strong>next number</strong> for your documents. 
+                    <span className="font-bold"> Warning:</span> Modifying the next number can lead to duplicates if set to a number that has already been used.
+                </p>
+
+                {([
+                    { type: 'invoice', label: 'Invoice' },
+                    { type: 'quotation', label: 'Quotation' },
+                    { type: 'salesOrder', label: 'Sales Order' },
+                    { type: 'booking', label: 'Booking' }
+                ]).map(({ type, label }) => {
+                    const prefixKey = `${type}Prefix` as keyof AppSettings;
+                    const counterKey = `${type}Counter` as keyof AppSettings;
+                    
+                    return (
+                        <div key={type} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-4 pb-4 border-b dark:border-gray-700 last:border-b-0 last:pb-0 last:mb-0">
+                            <label className="font-medium text-gray-700 dark:text-gray-300">{label}</label>
+                            <input 
+                                type="text" 
+                                name={prefixKey}
+                                placeholder="Prefix" 
+                                value={(localSettings[prefixKey] as string) || ''} 
+                                onChange={handleChange} 
+                                className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2"
+                            />
+                            <div className="flex items-center gap-2">
+                                <input 
+                                    type="number" 
+                                    name={counterKey} 
+                                    value={localSettings[counterKey] as number}
+                                    min="1"
+                                    onChange={handleChange} 
+                                    disabled={editingCounter !== type}
+                                    className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                />
+                                <button 
+                                    type="button" 
+                                    onClick={() => setEditingCounter(editingCounter === type ? null : type)}
+                                    className={`px-3 py-2 text-sm rounded-md flex-shrink-0 ${editingCounter === type ? 'bg-yellow-500 text-white' : 'bg-gray-200 dark:bg-gray-600'}`}
+                                >
+                                    {editingCounter === type ? 'Lock' : 'Edit'}
+                                </button>
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
 
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-8">

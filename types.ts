@@ -120,9 +120,13 @@ export interface Settings {
   upiQRCode: string | null;
   currency: '₹' | '$' | '€' | '£' | '¥' | 'A$' | 'C$';
   invoiceCounter: number;
+  invoicePrefix?: string;
   bookingCounter: number;
+  bookingPrefix?: string;
   quotationCounter: number;
+  quotationPrefix?: string;
   salesOrderCounter: number;
+  salesOrderPrefix?: string;
   invoiceTemplate?: 'classic' | 'modern' | 'compact' | 'creative' | 'professional';
   ticketTemplate?: 'classic' | 'modern' | 'minimalist' | 'boardingPass' | 'detailedItinerary';
 }

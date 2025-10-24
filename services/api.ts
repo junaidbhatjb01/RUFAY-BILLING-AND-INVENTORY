@@ -30,9 +30,13 @@ const defaultUserData = {
         upiQRCode: null,
         currency: '₹', 
         invoiceCounter: 1, 
+        invoicePrefix: 'INV-',
         bookingCounter: 1, 
+        bookingPrefix: 'BKG-',
         quotationCounter: 1, 
+        quotationPrefix: 'Q-',
         salesOrderCounter: 1,
+        salesOrderPrefix: 'SO-',
         invoiceTemplate: 'classic',
         ticketTemplate: 'classic',
     } 

@@ -36,7 +36,7 @@ const ClassicInvoiceTemplate: React.FC<TemplateProps> = ({ invoice, party, setti
                 </div>
                 <div className="text-right">
                     <h2 className="text-3xl font-bold text-teal-600 dark:text-teal-400">INVOICE</h2>
-                    <p className="text-sm"># INV-{invoice.invoiceNumber}</p>
+                    <p className="text-sm"># {settings.invoicePrefix || ''}{invoice.invoiceNumber}</p>
                     <p className="text-sm">Date: {new Date(invoice.date).toLocaleDateString()}</p>
                 </div>
             </header>

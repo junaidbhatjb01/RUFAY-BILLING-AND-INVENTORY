@@ -21,7 +21,7 @@ const CompactInvoiceTemplate: React.FC<TemplateProps> = ({ invoice, party, setti
                 </div>
                 <div className="text-right">
                     <h2 className="text-2xl font-bold text-teal-600 dark:text-teal-400">INVOICE</h2>
-                    <p className="text-xs"># INV-{invoice.invoiceNumber}</p>
+                    <p className="text-xs"># {settings.invoicePrefix || ''}{invoice.invoiceNumber}</p>
                     <p className="text-xs">Date: {new Date(invoice.date).toLocaleDateString()}</p>
                 </div>
             </header>

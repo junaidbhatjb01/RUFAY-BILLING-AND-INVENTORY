@@ -6,7 +6,7 @@ import { SalesOrderStatus } from '../../types';
 const SalesOrderDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { salesOrders, parties, settings } = useData();
+  const { salesOrders, parties, settings, quotations } = useData();
   const salesOrder = salesOrders.find(so => so.id === id);
 
   if (!salesOrder) {
@@ -14,6 +14,7 @@ const SalesOrderDetail: React.FC = () => {
   }
 
   const party = parties.find(p => p.id === salesOrder.partyId);
+  const quote = salesOrder.quotationId ? quotations.find(q => q.id === salesOrder.quotationId) : null;
 
   const handleConvertToInvoice = () => {
     navigate('/invoices/new', { state: { salesOrder } });
@@ -22,7 +23,7 @@ const SalesOrderDetail: React.FC = () => {
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">Sales Order #SO-{salesOrder.salesOrderNumber}</h1>
+            <h1 className="text-2xl font-bold">Sales Order #{settings.salesOrderPrefix || ''}{salesOrder.salesOrderNumber}</h1>
             <div className="flex gap-2">
                  {salesOrder.status !== SalesOrderStatus.COMPLETED && (
                     <button 
@@ -39,7 +40,7 @@ const SalesOrderDetail: React.FC = () => {
             <div><strong>Customer:</strong> {party?.name}</div>
             <div><strong>Date:</strong> {new Date(salesOrder.date).toLocaleDateString()}</div>
             <div><strong>Status:</strong> {salesOrder.status}</div>
-            {salesOrder.quotationId && <div><strong>From Quote:</strong> Q-{salesOrder.quotationId}</div>}
+            {quote && <div><strong>From Quote:</strong> {settings.quotationPrefix || ''}{quote.quotationNumber}</div>}
         </div>
 
         <table className="w-full mb-6">

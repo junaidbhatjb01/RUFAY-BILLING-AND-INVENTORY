@@ -97,13 +97,13 @@ const InvoiceDetail: React.FC = () => {
             heightLeft -= pageHeight;
         }
 
-        const fileName = `Invoice-INV-${invoice.invoiceNumber}.pdf`;
+        const fileName = `Invoice-${settings.invoicePrefix || ''}${invoice.invoiceNumber}.pdf`;
         const pdfBlob = pdf.output('blob');
 
         if (navigator.share) {
             const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
             await navigator.share({
-                title: `Invoice INV-${invoice.invoiceNumber}`,
+                title: `Invoice ${settings.invoicePrefix || ''}${invoice.invoiceNumber}`,
                 text: `Here is the invoice from ${settings.businessName}`,
                 files: [file],
             });

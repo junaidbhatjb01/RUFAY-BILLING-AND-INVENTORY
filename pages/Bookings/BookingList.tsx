@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useData } from '../../contexts/DataContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -50,7 +49,7 @@ const BookingList: React.FC = () => {
               const seriesInfo = getSeriesInfo(booking.seriesId);
               return (
                 <tr key={booking.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onClick={() => navigate(`/bookings/${booking.id}`)}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">BKG-{booking.bookingNumber}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{settings.bookingPrefix || ''}{booking.bookingNumber}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{new Date(booking.bookingDate).toLocaleDateString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{getPartyName(booking.partyId)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{seriesInfo?.pnr} ({seriesInfo?.route})</td>

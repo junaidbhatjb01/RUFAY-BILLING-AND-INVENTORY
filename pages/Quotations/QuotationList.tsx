@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useData } from '../../contexts/DataContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -44,7 +43,7 @@ const QuotationList: React.FC = () => {
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {quotations.sort((a,b) => b.quotationNumber - a.quotationNumber).map(quote => (
               <tr key={quote.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onClick={() => navigate(`/quotations/${quote.id}`)}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">Q-{quote.quotationNumber}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{settings.quotationPrefix || ''}{quote.quotationNumber}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{getPartyName(quote.partyId)}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{new Date(quote.date).toLocaleDateString()}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">{settings.currency}{quote.total.toFixed(2)}</td>

@@ -46,7 +46,7 @@ const DetailedItineraryTicketTemplate: React.FC<TemplateProps> = ({ booking, ser
             </section>
             
             <footer className="mt-8 pt-4 border-t dark:border-gray-700 text-xs text-center text-gray-500">
-                <p>Booking BKG-{booking.bookingNumber} | Invoice INV-{invoice.invoiceNumber} | Total: {settings.currency}{booking.totalAmount.toFixed(2)}</p>
+                <p>Booking {settings.bookingPrefix || ''}{booking.bookingNumber} | Invoice {settings.invoicePrefix || ''}{invoice.invoiceNumber} | Total: {settings.currency}{booking.totalAmount.toFixed(2)}</p>
                 <p>Thank you for choosing {settings.businessName}.</p>
             </footer>
         </div>

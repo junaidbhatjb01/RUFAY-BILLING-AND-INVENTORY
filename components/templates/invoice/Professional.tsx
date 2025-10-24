@@ -20,7 +20,7 @@ const ProfessionalInvoiceTemplate: React.FC<TemplateProps> = ({ invoice, party, 
                 </div>
                 <div className="text-right">
                     <h2 className="text-xl font-light text-gray-500">INVOICE</h2>
-                    <p className="font-bold text-lg"># INV-{invoice.invoiceNumber}</p>
+                    <p className="font-bold text-lg"># {settings.invoicePrefix || ''}{invoice.invoiceNumber}</p>
                 </div>
             </header>
 

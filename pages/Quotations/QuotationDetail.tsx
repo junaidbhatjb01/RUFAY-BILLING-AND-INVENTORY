@@ -22,7 +22,7 @@ const QuotationDetail: React.FC = () => {
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">Quotation #Q-{quotation.quotationNumber}</h1>
+            <h1 className="text-2xl font-bold">Quotation #{settings.quotationPrefix || ''}{quotation.quotationNumber}</h1>
             <div className="flex gap-2">
                  {quotation.status !== QuotationStatus.ACCEPTED && (
                     <button 

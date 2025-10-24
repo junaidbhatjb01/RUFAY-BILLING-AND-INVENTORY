@@ -56,7 +56,7 @@ const ModernTicketTemplate: React.FC<TemplateProps> = ({ booking, seriesInfo, re
                 <aside className="w-full md:w-64 bg-teal-50 dark:bg-teal-900 p-6">
                     <h3 className="font-bold text-lg mb-4">Booking Summary</h3>
                     <div className="space-y-3 text-sm">
-                        <FlightDetailRow label="Booking Ref" value={`BKG-${booking.bookingNumber}`} className="text-teal-600 dark:text-teal-400" />
+                        <FlightDetailRow label="Booking Ref" value={`${settings.bookingPrefix || ''}${booking.bookingNumber}`} className="text-teal-600 dark:text-teal-400" />
                         <FlightDetailRow label="Booked By" value={party.name} />
                         <FlightDetailRow label="Total Amount" value={`${settings.currency}${booking.totalAmount.toFixed(2)}`} />
                          {invoice && <Link to={`/invoices/${booking.invoiceId}`} className="text-teal-600 dark:text-teal-400 hover:underline block pt-2 border-t mt-2 dark:border-gray-700">View Invoice &rarr;</Link>}

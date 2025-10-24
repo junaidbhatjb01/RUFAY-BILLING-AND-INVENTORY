@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { useData } from '../../contexts/DataContext';
 import { Payment, PaymentType, Invoice, PaymentStatus, Party } from '../../types';
@@ -10,7 +9,7 @@ const PaymentModal: React.FC<{
     onSave: (payment: Payment, originalPayment: Payment | null) => void;
     payment: Payment | null;
 }> = ({ isOpen, onClose, onSave, payment: editingPayment }) => {
-    const { parties, invoices } = useData();
+    const { parties, invoices, settings } = useData();
     const [partyId, setPartyId] = useState(editingPayment?.partyId || '');
     const [invoiceId, setInvoiceId] = useState(editingPayment?.invoiceId || '');
     const [amount, setAmount] = useState(editingPayment?.amount || 0);
@@ -103,7 +102,7 @@ const PaymentModal: React.FC<{
                         <label className="block text-sm font-medium">Link to Invoice (Optional)</label>
                         <select value={invoiceId} onChange={e => setInvoiceId(e.target.value)} disabled={!partyId || direction === 'out'} className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 mt-1 disabled:bg-gray-200 dark:disabled:bg-gray-600">
                             <option value="">None</option>
-                            {availableInvoices.map(inv => <option key={inv.id} value={inv.id}>INV-{inv.invoiceNumber} ({inv.total - inv.amountPaid} due)</option>)}
+                            {availableInvoices.map(inv => <option key={inv.id} value={inv.id}>{settings.invoicePrefix || ''}{inv.invoiceNumber} ({inv.total - inv.amountPaid} due)</option>)}
                         </select>
                     </div>
                     <textarea placeholder="Notes (Optional)" value={notes} onChange={e => setNotes(e.target.value)} className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2" />
@@ -178,7 +177,7 @@ const PaymentList: React.FC = () => {
                             <tr key={p.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm">{new Date(p.date).toLocaleDateString()}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{getPartyName(p.partyId)}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{p.type} {p.invoiceId && `(INV-${invoices.find(i=>i.id===p.invoiceId)?.invoiceNumber})`}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{p.type} {p.invoiceId && `(${(settings.invoicePrefix || '')}${invoices.find(i=>i.id===p.invoiceId)?.invoiceNumber})`}</td>
                                 <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${p.direction === 'in' ? 'text-green-600' : 'text-red-600'}`}>
                                     {p.direction === 'in' ? '+' : '-'} {settings.currency}{p.amount.toFixed(2)}
                                 </td>
