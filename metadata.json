@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Copy of RuFay – Bill Fast. Grow Smart",
+  "description": "An offline-first business management app for small businesses to handle billing, stock, customers, and payments. Simple, fast, and easy to use, inspired by Vyapar, to help you manage everything in one place.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

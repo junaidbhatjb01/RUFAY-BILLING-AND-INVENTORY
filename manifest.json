@@ -1,0 +1,26 @@
+
+{
+  "short_name": "RuFay",
+  "name": "RuFay – Bill Fast. Grow Smart",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/fluency/96/invoice.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "https://img.icons8.com/fluency/192/invoice.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://img.icons8.com/fluency/512/invoice.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0284c7",
+  "background_color": "#ffffff"
+}
